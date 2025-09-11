@@ -1,8 +1,8 @@
 package com.lucas.Parkable.Service;
 
 import com.lucas.Parkable.DTOs.Mappers.VagaMapper;
-import com.lucas.Parkable.DTOs.VagaRequestDTO;
-import com.lucas.Parkable.DTOs.VagaResponseDTO;
+import com.lucas.Parkable.DTOs.Vaga.VagaRequestDTO;
+import com.lucas.Parkable.DTOs.Vaga.VagaResponseDTO;
 import com.lucas.Parkable.Models.VagaModel;
 import com.lucas.Parkable.Repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

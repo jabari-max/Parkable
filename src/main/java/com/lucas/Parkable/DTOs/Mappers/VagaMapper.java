@@ -1,6 +1,6 @@
 package com.lucas.Parkable.DTOs.Mappers;
 
-import com.lucas.Parkable.DTOs.VagaResponseDTO;
+import com.lucas.Parkable.DTOs.Vaga.VagaResponseDTO;
 import com.lucas.Parkable.Models.VagaModel;
 import org.mapstruct.Mapper;
 

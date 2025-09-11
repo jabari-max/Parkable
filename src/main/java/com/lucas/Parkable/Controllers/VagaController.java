@@ -1,8 +1,7 @@
 package com.lucas.Parkable.Controllers;
 
-import com.lucas.Parkable.DTOs.VagaRequestDTO;
-import com.lucas.Parkable.DTOs.VagaResponseDTO;
-import com.lucas.Parkable.Models.VagaModel;
+import com.lucas.Parkable.DTOs.Vaga.VagaRequestDTO;
+import com.lucas.Parkable.DTOs.Vaga.VagaResponseDTO;
 import com.lucas.Parkable.Service.VagasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
