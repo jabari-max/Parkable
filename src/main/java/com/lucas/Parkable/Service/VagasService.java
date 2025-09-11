@@ -1,10 +1,14 @@
 package com.lucas.Parkable.Service;
 
+import com.lucas.Parkable.DTOs.Mappers.VagaMapper;
+import com.lucas.Parkable.DTOs.VagaRequestDTO;
+import com.lucas.Parkable.DTOs.VagaResponseDTO;
 import com.lucas.Parkable.Models.VagaModel;
 import com.lucas.Parkable.Repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -12,24 +16,35 @@ public class VagasService {
 
     @Autowired
     private VagaRepository vagaRepository;
+    @Autowired
+    private VagaMapper vagaMapper;
 
-    public VagaModel adicionarVaga(String codigoVaga){
+    public VagaResponseDTO adicionarVaga(VagaRequestDTO vagaRequestDTO){
         VagaModel novaVaga = new VagaModel();
-        novaVaga.setCodigoVaga(codigoVaga);
+        novaVaga.setCodigoVaga(vagaRequestDTO.codigoVaga());
         novaVaga.setOcupada(false);
-        return vagaRepository.save(novaVaga);
+        return vagaMapper.map(vagaRepository.save(novaVaga));
     }
 
-    public List<VagaModel> listarTodasVagas(){
-        return vagaRepository.findAll();
+    public List<VagaResponseDTO> listarTodasVagas(){
+        List<VagaModel> vagasEncontradasModel = vagaRepository.findAll();
+        return vagasEncontradasModel.stream()
+                .map(vagaMapper :: map)
+                .collect(Collectors.toList());
     }
 
-    public List<VagaModel> listarVagasOcupadas(){
-        return vagaRepository.findByOcupadaIsTrue();
+    public List<VagaResponseDTO> listarVagasOcupadas(){
+        List<VagaModel> vagasEncontradasModel = vagaRepository.findByOcupadaIsTrue();
+        return vagasEncontradasModel.stream()
+                .map(vagaMapper::map)
+                .collect(Collectors.toList());
     }
 
-    public List<VagaModel> listarVagasLivres(){
-        return vagaRepository.findByOcupadaIsFalse();
+    public List<VagaResponseDTO> listarVagasLivres(){
+        List<VagaModel> vagasEncontradasModel = vagaRepository.findByOcupadaIsFalse();
+        return vagasEncontradasModel.stream()
+                .map (vagaMapper :: map)
+                .collect(Collectors.toList());
     }
 
     public void  deletarVaga(Long id){
