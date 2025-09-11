@@ -1,5 +1,7 @@
 package com.lucas.Parkable.Controllers;
 
+import com.lucas.Parkable.DTOs.VagaRequestDTO;
+import com.lucas.Parkable.DTOs.VagaResponseDTO;
 import com.lucas.Parkable.Models.VagaModel;
 import com.lucas.Parkable.Service.VagasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +15,23 @@ public class VagaController {
     @Autowired
     private VagasService vagasService;
 
-    @PostMapping("/adicionar/{codigoVaga}")
-    public VagaModel adicionarVaga (@PathVariable String codigoVaga){
+    @PostMapping("/adicionar")
+    public VagaResponseDTO adicionarVaga (@RequestBody VagaRequestDTO codigoVaga){
         return vagasService.adicionarVaga(codigoVaga);
     }
 
     @GetMapping("/listar")
-    public List<VagaModel> listarTodasVagas(){
+    public List<VagaResponseDTO> listarTodasVagas(){
         return vagasService.listarTodasVagas();
     }
 
     @GetMapping("/listarOcupadas")
-    public List<VagaModel> listarVagasOcupadas(){
+    public List<VagaResponseDTO> listarVagasOcupadas(){
         return vagasService.listarVagasOcupadas();
     }
 
     @GetMapping ("/listarLivres")
-    public List<VagaModel> listarVagasLivres(){
+    public List<VagaResponseDTO> listarVagasLivres(){
         return vagasService.listarVagasLivres();
     }
 
