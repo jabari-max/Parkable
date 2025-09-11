@@ -89,7 +89,11 @@ public class RegistroEstacionamentoService {
         return registroEstacionamentoRepository.findByTipoVeiculo(tipoVeiculo);
     }
 
-    public List<RegistroEstacionamentoModel> exibirRegistrosPlaca (String placa){
+    public List<RegistroEstacionamentoModel> exibirRegistrosPlaca(String placa){
         return registroEstacionamentoRepository.findByPlaca(placa);
+    }
+
+    public List<RegistroEstacionamentoModel> exibirRegistrosPresentes(){
+        return registroEstacionamentoRepository.findByHorarioSaidaIsNull();
     }
 }
