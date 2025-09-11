@@ -1,22 +1,41 @@
 package com.lucas.Parkable.Controllers;
 
+import com.lucas.Parkable.Models.VagaModel;
 import com.lucas.Parkable.Service.VagasService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/vagas")
 public class VagaController {
 
     @Autowired
     private VagasService vagasService;
 
+    @PostMapping("/adicionar/{codigoVaga}")
+    public VagaModel adicionarVaga (@PathVariable String codigoVaga){
+        return vagasService.adicionarVaga(codigoVaga);
+    }
 
-    /*TODO:
-    *  - Adicionar uma vaga
-    *  - Listar todas as vagas
-    *  - Listar vagas ocupadas
-    *  - Listar vagas vazias
-    *  - Remover uma vaga*/
+    @GetMapping("/listar")
+    public List<VagaModel> listarTodasVagas(){
+        return vagasService.listarTodasVagas();
+    }
+
+    @GetMapping("/listarOcupadas")
+    public List<VagaModel> listarVagasOcupadas(){
+        return vagasService.listarVagasOcupadas();
+    }
+
+    @GetMapping ("/listarLivres")
+    public List<VagaModel> listarVagasLivres(){
+        return vagasService.listarVagasLivres();
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public void deletarVaga(@PathVariable Long id){
+        vagasService.deletarVaga(id);
+    }
 }
+
