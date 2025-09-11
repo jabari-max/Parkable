@@ -1,5 +1,8 @@
 package com.lucas.Parkable.Service;
 
+import com.lucas.Parkable.DTOs.Mappers.RegistroEstacionamentoMapper;
+import com.lucas.Parkable.DTOs.RegistroEstacionamento.RegistroEstacionamentoRequestDTO;
+import com.lucas.Parkable.DTOs.RegistroEstacionamento.RegistroEstacionamentoResponseDTO;
 import com.lucas.Parkable.Enums.TipoVeiculo;
 import com.lucas.Parkable.Models.RegistroEstacionamentoModel;
 import com.lucas.Parkable.Models.VagaModel;
@@ -11,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RegistroEstacionamentoService {
@@ -19,31 +23,34 @@ public class RegistroEstacionamentoService {
     private RegistroEstacionamentoRepository registroEstacionamentoRepository;
     @Autowired
     private VagaRepository vagaRepository;
+    @Autowired
+    private RegistroEstacionamentoMapper registroEstacionamentoMapper;
 
 
-    public RegistroEstacionamentoModel registrarEntrada(String placa, Long vagaId, TipoVeiculo tipoVeiculo){
+    public RegistroEstacionamentoResponseDTO registrarEntrada(RegistroEstacionamentoRequestDTO registroEstacionamentoRequestDTO) {
+        Optional<VagaModel> vagaDesejadaModel = vagaRepository.findById(registroEstacionamentoRequestDTO.vagaId());
 
-        Optional<VagaModel> vagaDesejada = vagaRepository.findById(vagaId);
+        if (vagaDesejadaModel.isPresent()) {
+            if (!vagaDesejadaModel.get().isOcupada()) {
+                VagaModel vagaEncontradaModel = vagaDesejadaModel.get();
 
-        if (vagaDesejada.isPresent()) {
-            if (!vagaDesejada.get().isOcupada()){
-                VagaModel vagaEncontrada = vagaDesejada.get();
+                RegistroEstacionamentoModel novoRegistroModel = new RegistroEstacionamentoModel();
+                novoRegistroModel.setPlaca(registroEstacionamentoRequestDTO.placa());
+                novoRegistroModel.setHorarioEntrada(LocalDateTime.now());
+                novoRegistroModel.setVaga(vagaEncontradaModel);
+                novoRegistroModel.setTipoVeiculo(registroEstacionamentoRequestDTO.tipoVeiculo());
+                vagaEncontradaModel.setOcupada(true);
 
-                RegistroEstacionamentoModel novoRegistro = new RegistroEstacionamentoModel();
-                novoRegistro.setPlaca(placa);
-                novoRegistro.setHorarioEntrada(LocalDateTime.now());
-                novoRegistro.setVaga(vagaEncontrada);
-                novoRegistro.setTipoVeiculo(tipoVeiculo);
-                vagaEncontrada.setOcupada(true);
-                vagaRepository.save(vagaEncontrada);
+                vagaRepository.save(vagaEncontradaModel);
 
-                return registroEstacionamentoRepository.save(novoRegistro);
-            } return null;
-        } return null;
-
+                return registroEstacionamentoMapper.map(registroEstacionamentoRepository.save(novoRegistroModel));
+            }
+            return null;
+        }
+        return null;
     }
 
-    public RegistroEstacionamentoModel registrarSaida (Long id) {
+    public RegistroEstacionamentoResponseDTO registrarSaida(Long id) {
         Optional<RegistroEstacionamentoModel> veiculo = registroEstacionamentoRepository.findById(id);
 
         if (veiculo.isPresent()) {
@@ -76,24 +83,38 @@ public class RegistroEstacionamentoService {
             vagaRespectiva.setOcupada(false);
             vagaRepository.save(vagaRespectiva);
 
-            return registroEstacionamentoRepository.save(veiculoEncontrado);
+            return registroEstacionamentoMapper.map(registroEstacionamentoRepository.save(veiculoEncontrado));
 
-        } return null;
+        }
+        return null;
     }
 
-    public List<RegistroEstacionamentoModel> exibirRegistros(){
-        return registroEstacionamentoRepository.findAll();
+    public List<RegistroEstacionamentoResponseDTO> exibirRegistros(){
+        List<RegistroEstacionamentoModel> registrosModel = registroEstacionamentoRepository.findAll();
+        return registrosModel.stream()
+                .map(registroEstacionamentoMapper::map)
+                .collect(Collectors.toList());
     }
 
-    public List<RegistroEstacionamentoModel> exibirRegistrosTipo(TipoVeiculo tipoVeiculo){
-        return registroEstacionamentoRepository.findByTipoVeiculo(tipoVeiculo);
+    public List<RegistroEstacionamentoResponseDTO> exibirRegistrosTipo(TipoVeiculo tipoVeiculo){
+        List<RegistroEstacionamentoModel> registrosModel = registroEstacionamentoRepository.findByTipoVeiculo(tipoVeiculo);
+        return registrosModel.stream()
+                .map(registroEstacionamentoMapper::map)
+                .collect(Collectors.toList());
     }
 
-    public List<RegistroEstacionamentoModel> exibirRegistrosPlaca(String placa){
-        return registroEstacionamentoRepository.findByPlaca(placa);
+    public List<RegistroEstacionamentoResponseDTO> exibirRegistrosPlaca(String placa) {
+        List<RegistroEstacionamentoModel> registrosModel =  registroEstacionamentoRepository.findByPlaca(placa);
+        return registrosModel.stream()
+                .map(registroEstacionamentoMapper::map)
+                .collect(Collectors.toList());
     }
 
-    public List<RegistroEstacionamentoModel> exibirRegistrosPresentes(){
-        return registroEstacionamentoRepository.findByHorarioSaidaIsNull();
+    public List<RegistroEstacionamentoResponseDTO> exibirRegistrosPresentes() {
+        List<RegistroEstacionamentoModel> registrosEncontrados = registroEstacionamentoRepository.findByHorarioSaidaIsNull();
+        return registrosEncontrados.stream()
+                .map(registroEstacionamentoMapper::map)
+                .collect(Collectors.toList());
     }
+
 }
