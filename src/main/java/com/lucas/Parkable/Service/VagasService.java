@@ -13,23 +13,26 @@ public class VagasService {
     @Autowired
     private VagaRepository vagaRepository;
 
-    private VagaModel adicionarVaga(VagaModel vagaModel){
-        return vagaRepository.save(vagaModel);
+    public VagaModel adicionarVaga(String codigoVaga){
+        VagaModel novaVaga = new VagaModel();
+        novaVaga.setCodigoVaga(codigoVaga);
+        novaVaga.setOcupada(false);
+        return vagaRepository.save(novaVaga);
     }
 
-    private List<VagaModel> listarTodasVagas(){
+    public List<VagaModel> listarTodasVagas(){
         return vagaRepository.findAll();
     }
 
-    private List<VagaModel> listarVagasOcupadas(){
+    public List<VagaModel> listarVagasOcupadas(){
         return vagaRepository.findByOcupadaIsTrue();
     }
 
-    private List<VagaModel> listarVagasLivres(){
+    public List<VagaModel> listarVagasLivres(){
         return vagaRepository.findByOcupadaIsFalse();
     }
 
-    private void  deletarVaga(Long id){
+    public void  deletarVaga(Long id){
         if (vagaRepository.existsById(id)){
             vagaRepository.deleteById(id);
         }
