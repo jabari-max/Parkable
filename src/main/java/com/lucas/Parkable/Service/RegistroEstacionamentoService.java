@@ -85,8 +85,7 @@ public class RegistroEstacionamentoService {
 
             return registroEstacionamentoMapper.map(registroEstacionamentoRepository.save(veiculoEncontrado));
 
-        }
-        return null;
+        } return null;
     }
 
     public List<RegistroEstacionamentoResponseDTO> exibirRegistros(){
@@ -115,6 +114,15 @@ public class RegistroEstacionamentoService {
         return registrosEncontrados.stream()
                 .map(registroEstacionamentoMapper::map)
                 .collect(Collectors.toList());
+    }
+
+    public boolean deletarRegistro(Long id){
+        Optional<RegistroEstacionamentoModel> registroProcurado = registroEstacionamentoRepository.findById(id);
+
+        if (registroProcurado != null){
+            registroEstacionamentoRepository.deleteById(id);
+            return true;
+        } return false;
     }
 
 }
