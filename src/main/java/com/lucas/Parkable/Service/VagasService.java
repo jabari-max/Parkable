@@ -8,6 +8,7 @@ import com.lucas.Parkable.Repository.VagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -47,10 +48,12 @@ public class VagasService {
                 .collect(Collectors.toList());
     }
 
-    public void  deletarVaga(Long id){
+    public boolean  deletarVaga(Long id){
         if (vagaRepository.existsById(id)){
             vagaRepository.deleteById(id);
-        }
+            return true;
+        } return false;
     }
+
 
 }
