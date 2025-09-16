@@ -12,4 +12,6 @@ public interface RegistroEstacionamentoRepository extends JpaRepository <Registr
     List<RegistroEstacionamentoModel> findByTipoVeiculo(TipoVeiculo tipoVeiculo);
 
     List<RegistroEstacionamentoModel> findByHorarioSaidaIsNull();
+
+    List<RegistroEstacionamentoModel> findByHorarioSaidaIsNotNullOrderByHorarioSaidaDesc();
 }
