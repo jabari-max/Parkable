@@ -125,4 +125,10 @@ public class RegistroEstacionamentoService {
         } return false;
     }
 
+    public List<RegistroEstacionamentoResponseDTO> exibirHistorico() {
+        return registroEstacionamentoRepository.findByHorarioSaidaIsNotNullOrderByHorarioSaidaDesc()
+                .stream()
+                .map(registroEstacionamentoMapper::map)
+                .toList();
+    }
 }
