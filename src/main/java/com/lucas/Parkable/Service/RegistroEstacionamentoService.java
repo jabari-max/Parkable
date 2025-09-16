@@ -119,7 +119,7 @@ public class RegistroEstacionamentoService {
     public boolean deletarRegistro(Long id){
         Optional<RegistroEstacionamentoModel> registroProcurado = registroEstacionamentoRepository.findById(id);
 
-        if (registroProcurado != null){
+        if (registroProcurado.isPresent()){
             registroEstacionamentoRepository.deleteById(id);
             return true;
         } return false;
