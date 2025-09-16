@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkable - Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+
+<header class="main-header">
+    <div class="container">
+        <h1><i class="fa-solid fa-square-parking"></i> Parkable</h1>
+    </div>
+</header>
+
+<main class="container">
+    <div class="actions-container">
+        <div class="form-card">
+            <h2><i class="fa-solid fa-plus"></i> Adicionar Nova Vaga</h2>
+            <form th:action="@{/ui/vagas/adicionar}" method="post">
+                <div class="form-group">
+                    <label for="codigoVaga">Código da Vaga</label>
+                    <input type="text" id="codigoVaga" name="codigoVaga" required placeholder="Ex: A1">
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Adicionar</button>
+            </form>
+        </div>
+
+        <div class="form-card">
+            <h2><i class="fa-solid fa-right-to-bracket"></i> Registrar Entrada</h2>
+            <form th:action="@{/ui/estacionamento/registrar-entrada}" th:object="${entradaRequest}" method="post">
+                <div class="form-group">
+                    <label for="placa">Placa</label>
+                    <input type="text" id="placa" th:field="*{placa}" required placeholder="ABC-1234">
+                </div>
+                <div class="form-group">
+                    <label for="tipoVeiculo">Tipo de Veículo</label>
+                    <select id="tipoVeiculo" th:field="*{tipoVeiculo}" required>
+                        <option th:each="tipo : ${T(com.lucas.Parkable.Enums.TipoVeiculo).values()}"
+                                th:value="${tipo}" th:text="${tipo}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vagaId">Vaga Disponível</label>
+                    <select id="vagaId" th:field="*{vagaId}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="vaga : ${vagasLivres}"
+                                th:value="${vaga.id()}" th:text="${vaga.codigoVaga()}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fa-solid fa-car-on-display"></i> Veículos Ativos no Pátio</h2>
+        <div class="table-container">
+            <div th:if="${veiculosAtivos.isEmpty()}" class="empty-state">
+                <p>Não há veículos no pátio no momento.</p>
+            </div>
+            <table th:unless="${veiculosAtivos.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Tipo</th>
+                    <th>Vaga</th>
+                    <th>Entrada</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="veiculo : ${veiculosAtivos}">
+                    <td data-label="Placa" th:text="${veiculo.placa()}"></td>
+                    <td data-label="Tipo" class="vehicle-type">
+                        <th:block th:switch="${veiculo.tipoVeiculo().name()}">
+                            <span th:case="'CARRO'"><i class="fa-solid fa-car" title="Carro"></i> CARRO</span>
+                            <span th:case="'MOTO'"><i class="fa-solid fa-motorcycle" title="Moto"></i> MOTO</span>
+                        </th:block>
+                    </td>
+                    <td data-label="Vaga" th:text="${veiculo.codigoVaga()}"></td>
+                    <td data-label="Entrada" th:text="${#temporals.format(veiculo.horarioEntrada(), 'dd/MM/yy HH:mm')}"></td>
+                    <td data-label="Ação">
+                        <form th:action="@{/ui/estacionamento/registrar-saida/{id}(id=${veiculo.id()})}" method="post">
+                            <button type="submit" class="btn btn-saida"><i class="fa-solid fa-right-from-bracket"></i> Registrar Saída</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fa-solid fa-grip"></i> Status das Vagas</h2>
+        <div class="vaga-grid">
+            <div th:each="vaga : ${vagas}" class="vaga-card" th:classappend="${vaga.ocupada()} ? 'ocupada' : 'livre'">
+                <div class="vaga-icon">
+                    <i th:if="${vaga.ocupada()}" class="fa-solid fa-car-side"></i>
+                    <i th:unless="${vaga.ocupada()}" class="fa-solid fa-square-check"></i>
+                </div>
+                <span class="vaga-codigo" th:text="${vaga.codigoVaga()}"></span>
+                <span class="vaga-status" th:text="${vaga.ocupada()} ? 'Ocupada' : 'Livre'"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Saídas</h2>
+        <div class="table-container">
+            <div th:if="${historico.isEmpty()}" class="empty-state">
+                <p>Ainda não há registros no histórico.</p>
+            </div>
+            <table th:unless="${historico.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Tipo</th>
+                    <th>Vaga</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Valor Pago</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="registro : ${historico}">
+                    <td data-label="Placa" th:text="${registro.placa()}"></td>
+                    <td data-label="Tipo" class="vehicle-type">
+                        <th:block th:switch="${registro.tipoVeiculo().name()}">
+                            <span th:case="'CARRO'"><i class="fa-solid fa-car" title="Carro"></i> CARRO</span>
+                            <span th:case="'MOTO'"><i class="fa-solid fa-motorcycle" title="Moto"></i> MOTO</span>
+                        </th:block>
+                    </td>
+                    <td data-label="Vaga" th:text="${registro.codigoVaga()}"></td>
+                    <td data-label="Entrada" th:text="${#temporals.format(registro.horarioEntrada(), 'dd/MM/yy HH:mm')}"></td>
+                    <td data-label="Saída" th:text="${#temporals.format(registro.horarioSaida(), 'dd/MM/yy HH:mm')}"></td>
+                    <td data-label="Valor Pago" th:text="'R$ ' + ${#numbers.formatDecimal(registro.valor(), 1, 2, 'COMMA')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>
