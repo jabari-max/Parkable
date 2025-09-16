@@ -25,7 +25,7 @@ public class VagaController {
                 .body(vagaAdicionada);
     }
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public ResponseEntity<List<VagaResponseDTO>> listarTodasVagas() {
         List<VagaResponseDTO> vagasDTO = vagasService.listarTodasVagas();
         return ResponseEntity.ok(vagasDTO);

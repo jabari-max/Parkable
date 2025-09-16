@@ -37,7 +37,7 @@ public class RegistroEstacionamentoController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public ResponseEntity<List<RegistroEstacionamentoResponseDTO>> exibirRegistros(){
         List<RegistroEstacionamentoResponseDTO> registrosEncontrados = registroEstacionamentoService.exibirRegistros();
         return ResponseEntity.ok(registrosEncontrados);
