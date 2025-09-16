@@ -1,7 +1,7 @@
 # Parkable - Sistema de Gerenciamento de Estacionamento
 
 ![Java](https://img.shields.io/badge/Java-21-blue?logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green?logo=spring&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.5-green?logo=spring&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-4.0-red?logo=apachemaven&logoColor=white)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-green?logo=thymeleaf&logoColor=white)
 
@@ -60,7 +60,7 @@ Durante o desenvolvimento, vários desafios foram superados, servindo como grand
 
 -   **Backend:**
     -   Java 21
-    -   Spring Boot 3
+    -   Spring Boot 3.5.5
     -   Spring Web
     -   Spring Data JPA / Hibernate
 -   **Frontend:**
