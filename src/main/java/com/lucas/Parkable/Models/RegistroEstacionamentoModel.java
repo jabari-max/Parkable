@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,7 +27,7 @@ public class RegistroEstacionamentoModel {
 
     private LocalDateTime horarioSaida;
 
-    private Double valor;
+    private BigDecimal valor;
 
     @ManyToOne
     @JoinColumn(name = "vaga_id", nullable = false)
