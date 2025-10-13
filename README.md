@@ -35,7 +35,7 @@ A aplicação conta com um dashboard limpo e moderno, que centraliza todas as op
 
 Parkable é uma solução robusta para o controle de pátios de estacionamento. A aplicação permite o gerenciamento completo do ciclo de vida de uma vaga, desde o cadastro e visualização de status até o registro de entrada e saída de veículos. A lógica de negócio inclui cálculo de preço baseado no tempo de permanência e um histórico detalhado de todas as operações.
 
-O backend foi construído seguindo as melhores práticas de design de APIs REST, utilizando o padrão DTO (Data Transfer Object) e Mappers para desacoplar a camada de API do modelo de persistência de dados. O frontend, renderizado no lado do servidor com Thymeleaf, oferece uma interface de usuário limpa, moderna e responsiva para interagir com o sistema.
+O backend foi construído seguindo as melhores práticas de design de APIs REST, utilizando o padrão DTO (Data Transfer Object) e Mappers para desacoplar a camada de API do modelo de persistência de dados. O frontend, renderizado no lado do servidor com Thymeleaf, oferece uma interface de usuário limpa, moderna e responsiva para interagir com o sistema. Para garantir a portabilidade e simplificar a configuração do ambiente, a aplicação foi totalmente containerizada com **Docker** e orquestrada com **Docker Compose**, permitindo que todo o sistema (aplicação + banco de dados PostgreSQL) seja executado com um único comando.
 
 ## 🚀 Funcionalidades
 
@@ -76,36 +76,41 @@ Durante o desenvolvimento, vários desafios foram superados, servindo como grand
 
 ## ⚙️ Instalação e Uso
 
-Para executar este projeto localmente, siga os passos abaixo:
+### 🐳 Rodando com Docker (Método Recomendado)
+Esta é a forma mais simples e rápida de executar o projeto, pois todo o ambiente (aplicação + banco de dados PostgreSQL) é gerenciado pelo Docker.
 
-1.  **Clone o repositório:**
+1.  **Pré-requisitos:**
+    * Docker e Docker Compose instalados.
+
+2.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/lucass-barreto/seu-repositorio.git](https://github.com/lucass-barreto/seu-repositorio.git)
-    cd seu-repositorio
+    git clone [https://github.com/lucass-barreto/parkable-app.git](https://github.com/lucass-barreto/parkable-app.git)
+    cd parkable-app
     ```
 
-2.  **Pré-requisitos:**
-    * Java (JDK) 21 instalado.
-    * Apache Maven instalado.
-
-3.  **Build do Projeto:**
-    Execute o comando Maven para construir o projeto. Isso irá baixar as dependências e gerar as classes do MapStruct.
+3.  **Configure as variáveis de ambiente:**
+    Na raiz do projeto, crie um arquivo `.env` a partir do exemplo `.env.example`. O comando abaixo faz uma cópia para você:
     ```bash
-    mvn clean install
+    cp .env.example .env
     ```
 
-4.  **Execute a Aplicação:**
-    Inicie a aplicação através da sua IDE, executando a classe principal `ParkableApplication.java`, ou via terminal:
+4.  **Suba o ambiente com Docker Compose:**
+    Este comando irá construir a imagem da aplicação e iniciar os containers da aplicação e do banco de dados em segundo plano.
     ```bash
-    java -jar target/Parkable-0.0.1-SNAPSHOT.jar
+    docker-compose up --build -d
     ```
 
 5.  **Acesse a Aplicação:**
+    Após alguns instantes, a aplicação estará disponível no seu navegador:
     * **Interface Web (Dashboard):** [http://localhost:8080/ui/dashboard](http://localhost:8080/ui/dashboard)
-    * **API REST (Exemplos):**
-        * `GET http://localhost:8080/vagas`
-        * `GET http://localhost:8080/estacionamento`
-    * **Console do Banco H2:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (Use as credenciais do `application.properties` se necessário).
+
+
+### 🐋 Imagem no Docker Hub
+Uma imagem pré-construída desta aplicação está disponível publicamente no Docker Hub. Você pode baixá-la diretamente com o comando:
+    ```bash
+    docker pull lucassbarreto/parkable-app:latest
+    ```
+**Para mais detalhes, visite o repositório no [Docker Hub](https://hub.docker.com/r/lucassbarreto/parkable-app).**
 
 ## 📫 Contato
 
